@@ -62,3 +62,17 @@ werden:
 		\beta_nA'$
 	\item Füge folgende Regel hinzu: $A' \rightarrow \varepsilon$
 \end{itemize}
+
+Hinweis: Die Grammatik darf keine $\varepsilon$-Produktionen enthalten, ansonsten kann eine
+versteckte Linksrekursion auftreten.
+
+\paragraph{Beispiel}
+
+\begin{flalign*}
+	A & \rightarrow Aa \mid bA \mid c &
+\end{flalign*}
+\ldots{wird} zu
+\begin{flalign*}
+	A  & \rightarrow bAA' \mid cA' & \\
+	A' & \rightarrow aA' \mid \varepsilon &
+\end{flalign*}
