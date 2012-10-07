@@ -1,0 +1,64 @@
+\section{Syntaktische Analyse}
+
+
+\subsection{Umwandlung NFA $\rightarrow$ CFG}
+
+Ein regulärer Ausdruck in Form eines endlichen Automaten (NFA) kann auch als Kontextfreie Grammatik
+(CFG) dargestellt werden:
+
+\begin{itemize}
+	\item Jeder Zustand des NFA wird zu einem Nicht-Terminal $A_i$
+	\item Falls $i$ der Startzustand ist, wird $A_i$ das Startsymbol
+	\item Ein Zustandsübergang $i \rightarrow j$ bei Eingabe von $a$ wird zur Produktion $A_i
+		\rightarrow aA_j$ (bei $\varepsilon$-Produktionen $A_i \rightarrow A_j$)
+	\item Falls $i$ ein Akzeptierzustand ist: $A_i \rightarrow \varepsilon$
+\end{itemize}
+
+Nachfolgend eine Beispielumwandlung:
+
+\subsubsection*{Regex}
+
+$(a|b)*abb$
+
+\subsubsection*{NFA}
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=2.8cm,semithick]
+
+	\node[state,initial]   (Q1)               {$q_1$};
+	\node[state]           (Q2) [right of=Q1] {$q_2$};
+	\node[state]           (Q3) [right of=Q2] {$q_3$};
+	\node[state,accepting] (Q4) [right of=Q3] {$q_4$};
+
+	\path (Q1) edge [loop below] node {$a,b$} (Q1)
+	      (Q1) edge              node {$a$}   (Q2)
+	      (Q2) edge              node {$b$}   (Q3)
+	      (Q3) edge              node {$b$}   (Q4);
+
+\end{tikzpicture}
+
+\subsubsection*{CFG}
+
+\begin{flalign*}
+	A_0 & \rightarrow aA_0 \mid bA_0 \mid aA_1 &\\
+	A_1 & \rightarrow bA_2 &\\
+	A_2 & \rightarrow bA_3 &\\
+	A_3 & \rightarrow \varepsilon &
+\end{flalign*}
+
+
+\subsection{Eliminieren von Linksrekursion}
+
+Einfache (direkte) Linksrekursionen können mithilfe des folgenden Algorithmus einfach entfernt
+werden:
+
+\begin{itemize}
+	\item Es seien $A \rightarrow A\alpha_1 \mid A\alpha_2 \mid \ldots \mid A\alpha_m$ die
+		linksrekursiven Regeln
+	\item Es seien $A \rightarrow \beta_1 \mid \beta_2 \mid \ldots \mid \beta_n$ die nicht
+		linksrekursiven Regeln
+	\item Ersetze die erste Gruppe durch $A' \rightarrow \alpha_1A'\mid \alpha_2A' \mid \ldots \mid
+		\alpha_mA'$
+	\item Ersetze die zweite Gruppe durch $A \rightarrow \beta_1A' \mid \beta_2A' \mid \ldots \mid
+		\beta_nA'$
+	\item Füge folgende Regel hinzu: $A' \rightarrow \varepsilon$
+\end{itemize}

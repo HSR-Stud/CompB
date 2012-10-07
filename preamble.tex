@@ -1,0 +1,37 @@
+% Strict mode
+
+\RequirePackage[l2tabu, orthodox]{nag} % Warn when using deprecated constructs
+
+% Document class and packages
+
+\documentclass[10pt,a4paper,parskip]{scrartcl}
+\linespread{1.05} % Palatino needs more leading space
+\usepackage[a4paper,vmargin={30mm},hmargin={30mm}]{geometry} % Page margins
+\usepackage[ngerman]{babel} % New German hyphenation (multilingual support)
+\usepackage[utf8x]{inputenc} % Unicode support
+\usepackage{amsmath} % AMS math package
+\usepackage{amsfonts} % AMS fonts
+\usepackage{amssymb} % AMS symbols
+\usepackage{fixmath} % ISO conform greek letters
+\usepackage{graphicx} % Graphics support
+\usepackage{float} % Use H placement specifier for floats
+\usepackage{longtable} % Tables across several pages
+\usepackage{siunitx} % SI unit macros and "S" column type
+\usepackage{hyperref} % Hyperlinks
+\usepackage{fancyhdr} % Fancy headers
+
+% Font configuration
+
+\usepackage[sc]{mathpazo} % Use palatino font
+\usepackage[T1]{fontenc} % Use correct font encoding
+\usepackage[babel=true]{microtype} % Micro-typographic optimizations
+\addtokomafont{disposition}{\rmfamily} % Set palatino as heading font
+
+% Additional math operators
+
+\DeclareMathOperator{\lb}{lb} % Binary logarithm
+
+% TikZ / PGF
+\usepackage{pgf} % Backend for TikZ
+\usepackage{tikz} % TikZ vector graphics
+\usetikzlibrary{arrows,automata}

@@ -1,0 +1,15 @@
+% Capture title and author
+\makeatletter
+\let\Title\@title
+\let\Author\@author
+\makeatother
+
+% Fancy headers configuration
+\pagestyle{fancy}
+\fancyhead{} % Clear all header fields
+\fancyhead[LO,LE]{\bfseries \Title}
+\fancyhead[RO,RE]{\Author}
+\fancyfoot{} % Clear all footer fields
+\fancyfoot[CO,CE]{Page \thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
