@@ -4,7 +4,7 @@
 all: scons clean
 
 scons:
-	scons
+	scons-local/scons.py
 
 clean:
 	rm -f *.toc *.aux *.log *.out
