@@ -21,5 +21,7 @@
 *.mtc1
 *.out
 *.pdf
+*.info
 *.synctex*
 *.synctex.gz
+.sconsign.dblite

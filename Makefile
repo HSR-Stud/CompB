@@ -1,10 +1,10 @@
 # Makefile to create PDF documents from LaTeX-Files
-# Needed software packages: pdflatex, rubber
+# Needed software packages: pdflatex, scons
 
-all: CompB.pdf clean
+all: scons clean
 
-%.pdf: %.tex
-	rubber -m pdftex $<
+scons:
+	scons
 
 clean:
 	rm -f *.toc *.aux *.log *.out
@@ -12,6 +12,6 @@ clean:
 cleanall:
 	rm -f *.toc *.pdf *.aux *.log *.out
 
-.PHONY: all clean cleanall
+.PHONY: all scons clean cleanall
 
 # vim: set tabstop=4 shiftwidth=4 noexpandtab:
