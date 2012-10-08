@@ -73,6 +73,64 @@ versteckte Linksrekursion auftreten.
 \end{flalign*}
 \ldots{wird} zu
 \begin{flalign*}
-	A  & \rightarrow bAA' \mid cA' & \\
+	A  & \rightarrow bAA' \mid cA' &\\
 	A' & \rightarrow aA' \mid \varepsilon &
+\end{flalign*}
+
+
+\subsection{FIRST und FOLLOW Sets}
+
+\subsubsection{FIRST Set}
+
+Das FIRST-Set für ein Nicht-Terminal X besteht aus allen Terminalsymbolen, die auf X folgen können.
+Dabei werden nachfolgende Terminalsymbole aufgelöst.
+
+Man betrachtet dafür alle Produktionen, wo X auf der linken Seite steht:
+
+% TODO Punkte 3 und 4 sind noch schlecht formuliert. Das muss noch besser gehen!
+\begin{enumerate}
+	\item Wenn auf der rechten Seite der Produktion als erstes ein Terminal steht, gehört dieses
+		zum FIRST-Set von X.
+	\item Wenn auf der rechten Seite der Produktion ein $\varepsilon$ steht, gehört dieses zum
+		FIRST-Set von X.
+	\item Wenn auf der rechten Seite der Produktion als erstes ein Nicht-Terminal Y steht, gehört das
+		FIRST-Set von Y (abzüglich allfälliger $\varepsilon$) zum FIRST-Set von X.
+	\item Wenn dieses FIRST-Set von Y ein $\varepsilon$ enthält, berücksichtigt man auch alle Fälle,
+		bei welchen $\varepsilon$ weggelassen wird. Wenn es keine solchen Fälle gibt, gehört auch
+		$\varepsilon$ zum FIRST-Set von X.
+\end{enumerate}
+
+\subsubsection*{Beispiel}
+
+Grammatik:
+\begin{flalign*}
+	S & \rightarrow Ax \mid By \mid z &\\
+	A & \rightarrow 1CB \mid 2CB &\\
+	B & \rightarrow 3B \mid C &\\
+	C & \rightarrow 4 \mid \varepsilon &
+\end{flalign*}
+Lösungsweg:
+\begin{enumerate}
+	\item Das FIRST-Set von $C$ ist $\{4,\varepsilon\}$ gemäss Regeln 1 und 2.
+	\item Das FIRST-Set von $B$ enthält gemäss Regel 1 $\{3\}$.
+	\item Aufgrund der Produktion $B \rightarrow C$ und der Regel 3 enthält das FIRST-Set von $B$ auch
+		das FIRST-Set von $C$, abzüglich des $\varepsilon$.
+	\item Aufgrund der Regel 4 werden auch alle Produktionen berücksichtigt, bei denen das
+		$\varepsilon$ (und somit das $C$) ``überlesen'' wird. Da auf $C$ jedoch nichts mehr folgt,
+		enthält FIRST(B) auch $\{\varepsilon\}$.
+	\item Das FIRST-Set von $A$ ist gemäss Regel 1 $\{1,2\}$.
+	\item Das FIRST-Set von $S$ enthält gemäss Regel 1 $\{z\}$.
+	\item Das FIRST-Set von $S$ enthält gemäss Regel 3 das FIRST-Set von $A$ und $B$, abzüglich
+		des $\varepsilon$ in FIRST(B).
+	\item Da FIRST(B) $\varepsilon$ enthält, wird zusätzlich der Fall berücksichtigt, bei dem $B$
+		weggelassen wird. Da in der Produktion $S \rightarrow By$ auf das $B$ ein $y$ folgt, ist auch
+		dieses in FIRST(S) enthalten. (Falls anstelle von $y$ ein Non-Terminal folgen würde, müsste man
+		auch dieses auflösen.)
+\end{enumerate}
+Obige Lösungsschritte resultieren in folgenden FIRST-Sets:
+\begin{flalign*}
+	& FIRST(S) = \{1,2,3,4,y,z\} &\\
+	& FIRST(A) = \{1,2\} &\\
+	& FIRST(B) = \{3,4,\varepsilon\} &\\
+	& FIRST(C) = \{4,\varepsilon\} &
 \end{flalign*}
