@@ -4,7 +4,8 @@
 \subject{Compilerbau}
 \title{CompB Zusammenfassung}
 \author{Danilo Bargen}
-\date{Stand: 8. Oktober 2012}
+\makeatletter \immediate\write18{git log -1 --format="\@percentchar ad" --date=short > \jobname.info}
+\date{Stand: \input{\jobname.info}}
 
 
 \input{header.tex}
