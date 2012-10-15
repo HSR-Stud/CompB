@@ -25,3 +25,5 @@
 *.synctex*
 *.synctex.gz
 .sconsign.dblite
+*.fdb_latexmk
+*.fls
