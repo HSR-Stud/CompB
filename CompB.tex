@@ -1,11 +1,11 @@
 \input{preamble.tex}
+\input{revision.tex}
 
 
 \subject{Compilerbau}
 \title{CompB Zusammenfassung}
 \author{Danilo Bargen}
-\makeatletter \immediate\write18{git log -1 --format="\@percentchar ad" --date=short > \jobname.info}
-\date{Stand: \input{\jobname.info}}
+\date{Stand: \revisiondate}
 
 
 \input{header.tex}

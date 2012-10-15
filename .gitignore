@@ -27,3 +27,4 @@
 .sconsign.dblite
 *.fdb_latexmk
 *.fls
+revision.tex
