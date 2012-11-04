@@ -85,7 +85,7 @@ versteckte Linksrekursion auftreten.
 Das FIRST-Set für ein Nicht-Terminal $X$ besteht aus allen Terminalsymbolen, die auf $X$ folgen können.
 Dabei werden nachfolgende Terminalsymbole aufgelöst.
 
-Man betrachtet dafür alle Produktionen, wo $X$ auf der linken Seite steht:
+Man betrachtet dafür alle Produktionen, bei welchen $X$ auf der linken Seite steht:
 
 % TODO Punkte 3 und 4 sind noch schlecht formuliert. Das muss noch besser gehen!
 \begin{enumerate}
@@ -96,7 +96,7 @@ Man betrachtet dafür alle Produktionen, wo $X$ auf der linken Seite steht:
 	\item Wenn auf der rechten Seite der Produktion als erstes ein Nicht-Terminal $Y$ steht, gehört
 		das FIRST-Set von $Y$ (abzüglich allfälliger $\varepsilon$) zum FIRST-Set von $X$.
 	\item Wenn dieses FIRST-Set von $Y$ ein $\varepsilon$ enthält, berücksichtigt man auch alle Fälle,
-		bei welchen $\varepsilon$ weggelassen wird. Wenn es keine solchen Fälle gibt, gehört auch
+		bei welchen $Y$ weggelassen wird. Wenn es keine solchen Fälle gibt, gehört auch
 		$\varepsilon$ zum FIRST-Set von $X$.
 \end{enumerate}
 
@@ -142,3 +142,5 @@ Obige Lösungsschritte resultieren in folgenden FIRST-Sets:
 	\item Wenn X am Ende einer Produktion steht, wird das FOLLOW-Set von X durch das FOLLOW-Set des
 		Produktions-Kopfes von X ersetzt.
 \end{itemize}
+
+TODO: fertigmachen.
