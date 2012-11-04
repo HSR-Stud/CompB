@@ -28,3 +28,4 @@
 *.fdb_latexmk
 *.fls
 revision.tex
+*.swp

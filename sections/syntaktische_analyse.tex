@@ -66,7 +66,7 @@ werden:
 Hinweis: Die Grammatik darf keine $\varepsilon$-Produktionen enthalten, ansonsten kann eine
 versteckte Linksrekursion auftreten.
 
-\paragraph{Beispiel}
+\subsubsection*{Beispiel}
 
 \begin{flalign*}
 	A & \rightarrow Aa \mid bA \mid c &
@@ -144,3 +144,41 @@ Obige Lösungsschritte resultieren in folgenden FIRST-Sets:
 \end{itemize}
 
 TODO: fertigmachen.
+
+
+\subsection{Top-Down Parser} 
+
+TODO
+
+\subsection{Bottom-Up Parser} 
+
+Ein Bottom-Up Parser folgt einer umgekehrten Rechtsableitung.
+
+\subsubsection*{Beispiel}
+
+Gegeben ist folgende Grammatik:
+\begin{flalign*}
+	E & \rightarrow T \mid T + E &\\
+	T & \rightarrow int \mid int * T &\\
+\end{flalign*}
+
+Nachfolgend der Parse-Vorgang eines Bottom-Up Parsers für den Ausdruck $int * int + int$:
+
+\[
+	\begin{array}{|l|l|l|}
+	\hline
+	& \textrm{Ausdruck} & \textrm{Anzuwendende Regel} \\
+	\hline
+	1 & int * int + int & T \rightarrow int \\
+	2 & int * \boldsymbol T + int & T \rightarrow int * T \\
+	3 & \boldsymbol T + int & T \rightarrow int \\
+	4 & T + \boldsymbol T & E \rightarrow T \\
+	5 & T + \boldsymbol E & E \rightarrow T + E \\
+	6 & \boldsymbol E & \\
+	\hline
+	\end{array}
+\]
+
+Wenn man diese Parse-Schritte von unten nach oben betrachtet, sieht man, dass immer das am weitesten
+rechts stehende Non-Terminalsymbol (fett hervorgehoben) ersetzt wurde, es ist also eine
+Rechtsableitung von Unten nach Oben ($\rightarrow$ Bottom-Up).
