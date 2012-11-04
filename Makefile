@@ -1,3 +1,4 @@
+SHELL=bash
 TARGET=CompB.pdf
 LL=latexmk -pdf
 CLEAN=latexmk -C
