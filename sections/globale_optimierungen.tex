@@ -1,0 +1,17 @@
+\section{Globale Optimierungen}
+
+\subsection{Risiken}
+
+Globale Optimierung hängt von der Kenntnis einer Eigenschaft $P$ zu einem bestimmten Zeitpunkt der
+Programmausführung ab. Damit die Eigenschaft $P$ zu \textit{jedem} Ausführungszeitpunkt überprüft
+werden kann, muss das gesammte Programm bekannt sein.
+
+Aus Sicherheitsgründen sollte man deshalb eher konservativ optimieren. Im Zweifelsfall ist es besser
+nichts zu tun.
+
+\subsection{Datenflussanalyse}
+
+Die Datenflussanalyse verknüpft mit jedem Programmpunkt einen Datenflusswert. Die Datenflusswerte
+vor und hinter einer Anwendung $p$ sind $IN[p]$ und $OUT[p]$.
+
+Die Relation zwischen $IN$ und $OUT$ wird als \textit{Transferfunktion} bezeichnet.

@@ -1,0 +1,40 @@
+\section{Lokale Optimierungen}
+
+\subsection{Constant Propagation}
+
+Konstanten werden wo immer möglich eingesetzt.
+
+\subsubsection*{Beispiel}
+
+\begin{verbatim}
+X := 3
+Y := Z * W
+Q := X + Y
+\end{verbatim}
+
+wird zu
+
+\begin{verbatim}
+X := 3
+Y := Z * W
+Q := 3 + Y
+\end{verbatim}
+
+\subsection{Dead Code Elimination}
+
+Ungenutzer Code wird entfernt.
+
+\subsubsection*{Beispiel}
+
+\begin{verbatim}
+X := 3
+Y := Z * W
+Q := 3 + Y
+\end{verbatim}
+
+wird zu
+
+\begin{verbatim}
+Y := Z * W
+Q := 3 + Y
+\end{verbatim}
