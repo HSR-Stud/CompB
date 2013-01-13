@@ -1,0 +1,3 @@
+[submodule "texutils"]
+	path = texutils
+	url = git@github.com:dbrgn/texutils.git
