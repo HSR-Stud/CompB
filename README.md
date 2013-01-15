@@ -3,7 +3,7 @@ CompB
 
 Compilerbau.
 
-Work in progress.
+Work in progress. Jeweils aktuelle Version gibts hier: http://latexbuilder.dbrgn.ch/pdf/CompB/CompB.pdf
 
 
 Special Requirements
