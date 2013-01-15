@@ -1,6 +1,217 @@
 \section{Syntaktische Analyse}
 
 
+\subsection{Aufgaben eines Parsers}
+
+Die Aufgabe des Parser besteht darin, die Eingabesymbole, die der Lexer liefert,
+auf Korrektheit bezüglich der Grammatik der Sprache zu überprüfen.
+
+Für korrekte Eingaben erstellt der Parser einen Syntaxbaum, welcher
+anschliessend weiterverarbeitet wird. Bei Syntaxfehlern sollte der Parser
+möglichst gute Fehlermeldungen liefern und falls möglich mit der Verarbeitung
+der Eingabe fortfahren.
+
+Es gibt zwei Typen von Parsern: Top Down und Bottom Up Parser. Der Unterschied
+besteht darin, wie die Parse-Bäume aufgebaut werden, entweder von den Blättern
+zur Wurzel (Bottom Up) oder umgekehrt (Top Down).
+
+
+\subsection{Grammatik}
+
+Eine Grammatik besteht aus folgenden vier Elementen:
+
+\begin{itemize}
+	\item Einer Menge Terminalsymbole (\textbf{Tokens}).
+	\item Einer Menge Nicht-Terminalsymbole (\textbf{syntaktische Variablen}), aus
+		welchen sich Terminalsymbole ableiten lassen.
+	\item Einer Menge von Regeln (\textbf{Produktionen}). Auf der linken Seite
+		einer Produktion steht ein Nicht-Terminalsymbol, auf der Rechten eine Folge
+		von Terminalsymbolen und Nicht-Terminalsymbolen.
+	\item Einem \textbf{Startsymbol}.
+\end{itemize}
+
+Nachfolgend eine Beispielgrammatik. Terminalsymbole sind in Kleinbuchstaben
+geschrieben, Nicht-Terminalsymbole mit Grossbuchstaben. Die erste Regel hat das
+Startsymbol auf der Linken Seite.
+%
+\begin{align*}
+	1.~E &\rightarrow E + T \\
+	2.~E &\rightarrow T \\
+	3.~T &\rightarrow (E) \\
+	4.~T &\rightarrow id
+\end{align*}
+
+
+\subsection{Links- und Rechtsableitung}
+
+Links oder Rechts bedeutet, in welcher Reihenfolge die Nicht-Terminale durch
+Terminale ersetzt werden. Bei der Linksableitung wird immer das erste
+Nichtterminal vin Links gesehen als erstes ersetzt.
+
+
+\subsection{Operator-Assoziativität}
+
+Links- oder Rechtsassoziativität bedeutet, in welcher Reihenfolge Operatoren
+evaluiert werden.  Dies ist vor allem bei arithmetischen Ausdrücken von
+Bedeutung. Als Beispiel: Addition ist linksassoziativ.
+\[
+	a + b + c + d = (((a + b) + c) + d)
+\]
+
+Potenzierung ist rechtsassoziativ.
+\[
+	a^{b^c} = a^{(b^{(c)})}
+\]
+
+Einige Operatoren können auch nichtassoziativ sein. Folgender Ausdruck ist
+beispielsweise in vielen Programmiersprachen nicht erlaubt:
+\[
+	a < b < c
+\]
+
+
+\subsection{Eliminieren von Linksrekursion}
+
+Einfache (direkte) Linksrekursionen können mithilfe des folgenden Algorithmus einfach entfernt
+werden:
+
+\begin{itemize}
+	\item Es seien $A \rightarrow A\alpha_1 \mid A\alpha_2 \mid \ldots \mid A\alpha_m$ die
+		linksrekursiven Regeln
+	\item Es seien $A \rightarrow \beta_1 \mid \beta_2 \mid \ldots \mid \beta_n$ die nicht
+		linksrekursiven Regeln
+	\item Ersetze die erste Gruppe durch $A' \rightarrow \alpha_1A'\mid \alpha_2A' \mid \ldots \mid
+		\alpha_mA'$
+	\item Ersetze die zweite Gruppe durch $A \rightarrow \beta_1A' \mid \beta_2A' \mid \ldots \mid
+		\beta_nA'$
+	\item Füge folgende Regel hinzu: $A' \rightarrow \varepsilon$
+\end{itemize}
+
+Hinweis: Die Grammatik darf keine $\varepsilon$-Produktionen enthalten, ansonsten kann eine
+versteckte Linksrekursion auftreten.
+
+\textbf{Beispiel}
+%
+\begin{align*}
+	A &\rightarrow Aa \mid bA \mid c
+\end{align*}
+%
+\ldots{wird} zu
+%
+\begin{align*}
+	A  &\rightarrow bAA' \mid cA' \\
+	A' &\rightarrow aA' \mid \varepsilon 
+\end{align*}
+
+
+\subsection{Top-Down Parser} 
+
+TODO
+
+
+\subsection{Bottom-Up Parser} 
+
+Ein Bottom-Up Parser folgt einer umgekehrten Rechtsableitung.
+
+\textbf{Beispiel}
+
+Gegeben ist folgende Grammatik:
+%
+\begin{align*}
+	E &\rightarrow T \mid T + E \\
+	T &\rightarrow int \mid int * T
+\end{align*}
+
+Nachfolgend der Parse-Vorgang eines Bottom-Up Parsers für den Ausdruck $int * int + int$:
+\[
+	\begin{array}{|l|l|l|}
+	\hline
+	\textbf{Schritt} & \textbf{Ausdruck} & \textbf{Anzuwendende Regel} \\
+	\hline
+	1 & int * int + int & T \rightarrow int \\
+	2 & int * \boldsymbol T + int & T \rightarrow int * T \\
+	3 & \boldsymbol T + int & T \rightarrow int \\
+	4 & T + \boldsymbol T & E \rightarrow T \\
+	5 & T + \boldsymbol E & E \rightarrow T + E \\
+	6 & \boldsymbol E & \\
+	\hline
+	\end{array}
+\]
+
+Wenn man diese Parse-Schritte von unten nach oben betrachtet, sieht man, dass immer das am weitesten
+rechts stehende Non-Terminalsymbol (fett hervorgehoben) ersetzt wurde, es ist also eine
+Rechtsableitung von Unten nach Oben ($\rightarrow$ Bottom-Up).
+
+
+\subsection{FIRST und FOLLOW Sets}
+
+\subsubsection{FIRST Set}
+
+Das FIRST-Set für ein Nicht-Terminal $X$ besteht aus allen Terminalsymbolen, die auf $X$ folgen können.
+Dabei werden nachfolgende Terminalsymbole aufgelöst.
+
+Man betrachtet dafür alle Produktionen, bei welchen $X$ auf der linken Seite steht:
+
+% TODO Punkte 3 und 4 sind noch schlecht formuliert. Das muss noch besser gehen!
+\begin{enumerate}
+	\item Wenn auf der rechten Seite der Produktion als erstes ein Terminal steht, gehört dieses
+		zum FIRST-Set von $X$.
+	\item Wenn auf der rechten Seite der Produktion ein $\varepsilon$ steht, gehört dieses zum
+		FIRST-Set von $X$.
+	\item Wenn auf der rechten Seite der Produktion als erstes ein Nicht-Terminal $Y$ steht, gehört
+		das FIRST-Set von $Y$ (abzüglich allfälliger $\varepsilon$) zum FIRST-Set von $X$.
+	\item Wenn dieses FIRST-Set von $Y$ ein $\varepsilon$ enthält, berücksichtigt man auch alle Fälle,
+		bei welchen $Y$ weggelassen wird. Wenn es keine solchen Fälle gibt, gehört auch
+		$\varepsilon$ zum FIRST-Set von $X$.
+\end{enumerate}
+
+\textbf{Beispiel}
+
+Grammatik:
+\begin{flalign*}
+	S & \rightarrow Ax \mid By \mid z &\\
+	A & \rightarrow 1CB \mid 2CB &\\
+	B & \rightarrow 3B \mid C &\\
+	C & \rightarrow 4 \mid \varepsilon &
+\end{flalign*}
+Lösungsweg:
+\begin{enumerate}
+	\item Das FIRST-Set von $C$ ist $\{4,\varepsilon\}$ gemäss Regeln 1 und 2.
+	\item Das FIRST-Set von $B$ enthält gemäss Regel 1 $\{3\}$.
+	\item Aufgrund der Produktion $B \rightarrow C$ und der Regel 3 enthält das FIRST-Set von $B$ auch
+		das FIRST-Set von $C$, abzüglich des $\varepsilon$.
+	\item Aufgrund der Regel 4 werden auch alle Produktionen berücksichtigt, bei denen das
+		$\varepsilon$ (und somit das $C$) ``überlesen'' wird. Da auf $C$ jedoch nichts mehr folgt,
+		enthält FIRST(B) auch $\{\varepsilon\}$.
+	\item Das FIRST-Set von $A$ ist gemäss Regel 1 $\{1,2\}$.
+	\item Das FIRST-Set von $S$ enthält gemäss Regel 1 $\{z\}$.
+	\item Das FIRST-Set von $S$ enthält gemäss Regel 3 das FIRST-Set von $A$ und $B$, abzüglich
+		des $\varepsilon$ in FIRST(B).
+	\item Da FIRST(B) $\varepsilon$ enthält, wird zusätzlich der Fall berücksichtigt, bei dem $B$
+		weggelassen wird. Da in der Produktion $S \rightarrow By$ auf das $B$ ein $y$ folgt, ist auch
+		dieses in FIRST(S) enthalten. (Falls anstelle von $y$ ein Non-Terminal folgen würde, müsste man
+		auch dieses auf"|lösen.)
+\end{enumerate}
+Obige Lösungsschritte resultieren in folgenden FIRST-Sets:
+\begin{flalign*}
+	& FIRST(S) = \{1,2,3,4,y,z\} &\\
+	& FIRST(A) = \{1,2\} &\\
+	& FIRST(B) = \{3,4,\varepsilon\} &\\
+	& FIRST(C) = \{4,\varepsilon\} &
+\end{flalign*}
+
+\subsubsection{FOLLOW Set}
+
+\begin{itemize}
+	\item Das Follow-Set des Startsymbols ist $\{\$\}$.
+	\item Wenn X am Ende einer Produktion steht, wird das FOLLOW-Set von X durch das FOLLOW-Set des
+		Produktions-Kopfes von X ersetzt.
+\end{itemize}
+
+TODO: fertigmachen.
+
+
+
 \subsection{Umwandlung NFA $\rightarrow$ CFG}
 
 Ein regulärer Ausdruck in Form eines endlichen Automaten (NFA) kann auch als Kontextfreie Grammatik
@@ -46,139 +257,7 @@ $(a|b)*abb$
 \end{flalign*}
 
 
-\subsection{Eliminieren von Linksrekursion}
-
-Einfache (direkte) Linksrekursionen können mithilfe des folgenden Algorithmus einfach entfernt
-werden:
-
-\begin{itemize}
-	\item Es seien $A \rightarrow A\alpha_1 \mid A\alpha_2 \mid \ldots \mid A\alpha_m$ die
-		linksrekursiven Regeln
-	\item Es seien $A \rightarrow \beta_1 \mid \beta_2 \mid \ldots \mid \beta_n$ die nicht
-		linksrekursiven Regeln
-	\item Ersetze die erste Gruppe durch $A' \rightarrow \alpha_1A'\mid \alpha_2A' \mid \ldots \mid
-		\alpha_mA'$
-	\item Ersetze die zweite Gruppe durch $A \rightarrow \beta_1A' \mid \beta_2A' \mid \ldots \mid
-		\beta_nA'$
-	\item Füge folgende Regel hinzu: $A' \rightarrow \varepsilon$
-\end{itemize}
-
-Hinweis: Die Grammatik darf keine $\varepsilon$-Produktionen enthalten, ansonsten kann eine
-versteckte Linksrekursion auftreten.
-
-\subsubsection*{Beispiel}
-
-\begin{flalign*}
-	A & \rightarrow Aa \mid bA \mid c &
-\end{flalign*}
-\ldots{wird} zu
-\begin{flalign*}
-	A  & \rightarrow bAA' \mid cA' &\\
-	A' & \rightarrow aA' \mid \varepsilon &
-\end{flalign*}
 
 
-\subsection{FIRST und FOLLOW Sets}
-
-\subsubsection{FIRST Set}
-
-Das FIRST-Set für ein Nicht-Terminal $X$ besteht aus allen Terminalsymbolen, die auf $X$ folgen können.
-Dabei werden nachfolgende Terminalsymbole aufgelöst.
-
-Man betrachtet dafür alle Produktionen, bei welchen $X$ auf der linken Seite steht:
-
-% TODO Punkte 3 und 4 sind noch schlecht formuliert. Das muss noch besser gehen!
-\begin{enumerate}
-	\item Wenn auf der rechten Seite der Produktion als erstes ein Terminal steht, gehört dieses
-		zum FIRST-Set von $X$.
-	\item Wenn auf der rechten Seite der Produktion ein $\varepsilon$ steht, gehört dieses zum
-		FIRST-Set von $X$.
-	\item Wenn auf der rechten Seite der Produktion als erstes ein Nicht-Terminal $Y$ steht, gehört
-		das FIRST-Set von $Y$ (abzüglich allfälliger $\varepsilon$) zum FIRST-Set von $X$.
-	\item Wenn dieses FIRST-Set von $Y$ ein $\varepsilon$ enthält, berücksichtigt man auch alle Fälle,
-		bei welchen $Y$ weggelassen wird. Wenn es keine solchen Fälle gibt, gehört auch
-		$\varepsilon$ zum FIRST-Set von $X$.
-\end{enumerate}
-
-\subsubsection*{Beispiel}
-
-Grammatik:
-\begin{flalign*}
-	S & \rightarrow Ax \mid By \mid z &\\
-	A & \rightarrow 1CB \mid 2CB &\\
-	B & \rightarrow 3B \mid C &\\
-	C & \rightarrow 4 \mid \varepsilon &
-\end{flalign*}
-Lösungsweg:
-\begin{enumerate}
-	\item Das FIRST-Set von $C$ ist $\{4,\varepsilon\}$ gemäss Regeln 1 und 2.
-	\item Das FIRST-Set von $B$ enthält gemäss Regel 1 $\{3\}$.
-	\item Aufgrund der Produktion $B \rightarrow C$ und der Regel 3 enthält das FIRST-Set von $B$ auch
-		das FIRST-Set von $C$, abzüglich des $\varepsilon$.
-	\item Aufgrund der Regel 4 werden auch alle Produktionen berücksichtigt, bei denen das
-		$\varepsilon$ (und somit das $C$) ``überlesen'' wird. Da auf $C$ jedoch nichts mehr folgt,
-		enthält FIRST(B) auch $\{\varepsilon\}$.
-	\item Das FIRST-Set von $A$ ist gemäss Regel 1 $\{1,2\}$.
-	\item Das FIRST-Set von $S$ enthält gemäss Regel 1 $\{z\}$.
-	\item Das FIRST-Set von $S$ enthält gemäss Regel 3 das FIRST-Set von $A$ und $B$, abzüglich
-		des $\varepsilon$ in FIRST(B).
-	\item Da FIRST(B) $\varepsilon$ enthält, wird zusätzlich der Fall berücksichtigt, bei dem $B$
-		weggelassen wird. Da in der Produktion $S \rightarrow By$ auf das $B$ ein $y$ folgt, ist auch
-		dieses in FIRST(S) enthalten. (Falls anstelle von $y$ ein Non-Terminal folgen würde, müsste man
-		auch dieses auflösen.)
-\end{enumerate}
-Obige Lösungsschritte resultieren in folgenden FIRST-Sets:
-\begin{flalign*}
-	& FIRST(S) = \{1,2,3,4,y,z\} &\\
-	& FIRST(A) = \{1,2\} &\\
-	& FIRST(B) = \{3,4,\varepsilon\} &\\
-	& FIRST(C) = \{4,\varepsilon\} &
-\end{flalign*}
-
-\subsubsection{FOLLOW Set}
-
-\begin{itemize}
-	\item Das Follow-Set des Startsymbols ist $\{\$\}$.
-	\item Wenn X am Ende einer Produktion steht, wird das FOLLOW-Set von X durch das FOLLOW-Set des
-		Produktions-Kopfes von X ersetzt.
-\end{itemize}
-
-TODO: fertigmachen.
 
 
-\subsection{Top-Down Parser} 
-
-TODO
-
-\subsection{Bottom-Up Parser} 
-
-Ein Bottom-Up Parser folgt einer umgekehrten Rechtsableitung.
-
-\subsubsection*{Beispiel}
-
-Gegeben ist folgende Grammatik:
-\begin{flalign*}
-	E & \rightarrow T \mid T + E &\\
-	T & \rightarrow int \mid int * T &\\
-\end{flalign*}
-
-Nachfolgend der Parse-Vorgang eines Bottom-Up Parsers für den Ausdruck $int * int + int$:
-
-\[
-	\begin{array}{|l|l|l|}
-	\hline
-	& \textrm{Ausdruck} & \textrm{Anzuwendende Regel} \\
-	\hline
-	1 & int * int + int & T \rightarrow int \\
-	2 & int * \boldsymbol T + int & T \rightarrow int * T \\
-	3 & \boldsymbol T + int & T \rightarrow int \\
-	4 & T + \boldsymbol T & E \rightarrow T \\
-	5 & T + \boldsymbol E & E \rightarrow T + E \\
-	6 & \boldsymbol E & \\
-	\hline
-	\end{array}
-\]
-
-Wenn man diese Parse-Schritte von unten nach oben betrachtet, sieht man, dass immer das am weitesten
-rechts stehende Non-Terminalsymbol (fett hervorgehoben) ersetzt wurde, es ist also eine
-Rechtsableitung von Unten nach Oben ($\rightarrow$ Bottom-Up).
