@@ -228,7 +228,7 @@ Rechtsableitung von unten nach oben ($\rightarrow$ Bottom-Up).
 
 \subsection{FIRST und FOLLOW Sets}
 
-\subsubsection{FIRST Set}
+\subsubsection{FIRST-Set}
 
 Das FIRST-Set für ein Nicht-Terminal $X$ besteht aus allen Terminalsymbolen, die auf $X$ folgen können.
 Dabei werden nachfolgende Terminalsymbole aufgelöst.
@@ -264,15 +264,16 @@ Lösungsweg:
 	\item Aufgrund der Produktion $B \rightarrow C$ und der Regel 3 enthält das FIRST-Set von $B$ auch
 		das FIRST-Set von $C$, abzüglich des $\varepsilon$.
 	\item Aufgrund der Regel 4 werden auch alle Produktionen berücksichtigt, bei denen das
-		$\varepsilon$ (und somit das $C$) ``überlesen'' wird. Da auf $C$ jedoch nichts mehr folgt,
+		$\varepsilon$ (und somit das $C$) "`überlesen"' wird. Da auf $C$ jedoch nichts mehr folgt,
 		enthält FIRST(B) auch $\{\varepsilon\}$.
 	\item Das FIRST-Set von $A$ ist gemäss Regel 1 $\{1,2\}$.
 	\item Das FIRST-Set von $S$ enthält gemäss Regel 1 $\{z\}$.
 	\item Das FIRST-Set von $S$ enthält gemäss Regel 3 das FIRST-Set von $A$ und $B$, abzüglich
 		des $\varepsilon$ in FIRST(B).
-	\item Da FIRST(B) $\varepsilon$ enthält, wird zusätzlich der Fall berücksichtigt, bei dem $B$
-		weggelassen wird. Da in der Produktion $S \rightarrow By$ auf das $B$ ein $y$ folgt, ist auch
-		dieses in FIRST(S) enthalten. (Falls anstelle von $y$ ein Non-Terminal folgen würde, müsste man
+	\item Da FIRST(B) $\varepsilon$ enthält, wird zusätzlich der Fall
+		berücksichtigt, bei dem $B$ weggelassen wird. Da in der Produktion $S
+		\rightarrow By$ auf das $B$ ein $y$ folgt, ist auch dieses in FIRST(S)
+		enthalten. (Falls anstelle von $y$ ein Non-Terminal folgen würde, müsste man
 		auch dieses auf"|lösen.)
 \end{enumerate}
 Obige Lösungsschritte resultieren in folgenden FIRST-Sets:
@@ -283,12 +284,47 @@ Obige Lösungsschritte resultieren in folgenden FIRST-Sets:
 	& FIRST(C) = \{4,\varepsilon\} &
 \end{flalign*}
 
-\subsubsection{FOLLOW Set}
+\subsubsection{FOLLOW-Set}
 
-\begin{itemize}
-	\item Das Follow-Set des Startsymbols ist $\{\$\}$.
-	\item Wenn X am Ende einer Produktion steht, wird das FOLLOW-Set von X durch das FOLLOW-Set des
-		Produktions-Kopfes von X ersetzt.
-\end{itemize}
+Im Gegensatz zum FIRST-Set betrachtet man beim FOLLOW-Set alle Produktionen, bei
+welchen $X$ auf der rechten Seite steht.
 
-TODO: fertigmachen.
+\begin{enumerate}
+	\item Wenn $X$ das Startsymbol ist, gehört $\$$ zum FOLLOW-Set von $X$.
+	\item Für jede Produktion $A \rightarrow aXb$, füge FIRST(b) (ohne
+		$\varepsilon$) zu FOLLOW(X) hinzu.
+	\item Falls $\varepsilon$ in FIRST(b) ist, füge FOLLOW(A) zu FOLLOW(X)
+		hinzu.
+	\item Für jede Produktion $A \rightarrow aX$, füge FOLLOW(A) zu FOLLOW(X)
+		hinzu.
+\end{enumerate}
+
+\textbf{Beispiel}
+
+Grammatik:
+\begin{flalign*}
+	S & \rightarrow Ax \mid By \mid z &\\
+	A & \rightarrow 1CB \mid 2CB &\\
+	B & \rightarrow 3B \mid C &\\
+	C & \rightarrow 4 \mid \varepsilon &
+\end{flalign*}
+Lösungsweg:
+\begin{enumerate}
+	\item Das FOLLOW-Set von $S$ enthält gemäss Regel 1 $\{\$\}$.
+	\item Das FOLLOW-Set von $A$ enthält gemäss Regel 2 $\{x\}$.
+	\item Das FOLLOW-Set von $B$ enthält gemäss Regel 2 $\{y\}$.
+	\item Das FOLLOW-Set von $B$ enthält gemäss Regel 4 das FOLLOW-Set von $A$: $\{x\}$.
+	\item Das FOLLOW-Set von $C$ enthält gemäss Regel 2 das FIRST-Set von $B$ ohne
+		$\varepsilon$: $\{3, 4\}$.
+	\item Das FOLLOW-Set von $C$ enthält gemäss Regel 3 das FOLLOW-Set von $A$:
+		$\{x\}$.
+	\item Das FOLLOW-Set von $C$ enthält gemäss Regel 4 das FOLLOW-Set von $B$:
+		$\{x, y\}$.
+\end{enumerate}
+Obige Lösungsschritte resultieren in folgenden FOLLOW-Sets:
+\begin{flalign*}
+	& FIRST(S) = \{\$\} &\\
+	& FIRST(A) = \{x\} &\\
+	& FIRST(B) = \{x,y\} &\\
+	& FIRST(C) = \{3,4,x,y\} &
+\end{flalign*}
