@@ -1,0 +1,59 @@
+\section{Lexikalische Analyse}
+
+
+\subsection{Aufgaben eines Lexers}
+
+Der Lexer liesst den Eingabestromes und unterteilt ihn in Lexeme. Zusätzlich
+trägt er Bezeichner in eine Symboltabelle ein.
+
+Wichtig sind dabei folgende Begriffe:
+
+\begin{description}
+	\item[Lexem] Lexeme sind Zeichenketten, welche die kleinsten syntaktischen
+		Einheiten einer Programmiersprache bilden.
+	\item[Token] Ein Token besteht aus einem Namen und einem optionalen
+		Attributwert. Tokens formen eine syntaktische Kategorie für eine Klasse von
+		Lexemen. Mögliche Tokens sind Schlüsselwörter, Bezeichner, Operatoren oder
+		Konstanten.
+	\item[Pattern] Ein Pattern beschreibt den Aufbau eines Lexems eines Tokens.
+		Häufig werden die Patterns als Reguläre Ausdrücke dargestellt.
+	\item[Symboltabelle] In der Regel werden die Tokens nicht als Text
+		referenziert, sondern als Symbol/Zahl. Die Symboltabelle enthält Mappings
+		von Symbolen zu Tokens.
+\end{description}
+
+\subsubsection*{Beispiel}
+
+Aus dem Programmcode rechts kann man die Lexeme und Tokens links
+herauslesen.
+
+\begin{minipage}{.3\linewidth}
+	\begin{tabular}[h]{|l|l|}
+		\hline
+		\textbf{Lexem} & \textbf{Token} \\
+		\hline
+		x & ID \\
+		= & ASSIGNMENT \\
+		foo & ID \\
+		- & ARITHMETIC \\
+		1 & NUMBER \\
+		; & SEMICOLON \\
+		\hline
+	\end{tabular}
+\end{minipage}
+\begin{minipage}{.7\linewidth}
+	\centering
+	\large\texttt{x = foo - 1;}
+\end{minipage}
+
+
+\subsection{Probleme, Schwerigkeiten}
+
+Viele Sprachkonstrukte sind in der Phase der Lexikalischen Analyse noch nicht
+eindeutig identifizierbar. Die Zeichenkette \texttt{fi} kann zum Beispiel als
+Identifier oder als falsch geschriebenes Schlüsselwort \texttt{if} auftreten.
+Dadurch ist es für einen Lexer auch sehr Schwer, Fehler im Programm zu erkennen.
+
+Zudem spielt auch die Verarbeitungsreihenfolge eine wichtige Rolle. Werden
+beispielsweise Identifier vor den Schlüsselwörtern verarbeitet, so wird
+\texttt{while} als Variablenname und nicht als Schlüsselwort registriert.
