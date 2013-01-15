@@ -1,3 +1,6 @@
 [submodule "texutils"]
 	path = texutils
 	url = git@github.com:dbrgn/texutils.git
+[submodule "pygments"]
+	path = pygments
+	url = git@github.com:dbrgn/pygments-mirror.git

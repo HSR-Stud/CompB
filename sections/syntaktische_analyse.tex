@@ -142,8 +142,8 @@ Daraus ergeben sich folgende Tokens:
 \texttt{INT}, \texttt{OPEN}, \texttt{CLOSE}, \texttt{PLUS}, \texttt{TIMES}
 
 Nachfolgend der C-Code eines einfachen Recursive Descent Parsers:
-%
-\begin{verbatim}
+
+\begin{minted}[bgcolor=tango-bg,frame=lines,framesep=2mm,samepage=true]{c}
 bool term(TOKEN tok) { return *next++ ==  tok; }
 
 bool E1() { return T(); }
@@ -159,8 +159,8 @@ bool T() {
     TOKEN *save = next;
     return (next = save, T1()) || (next = save, T2()) || (next = save, T3());
 }
-\end{verbatim}
-%
+\end{minted}
+
 Das Problem bei diesem Algorithmus ist, dass er nicht alle Eingaben verarbeiten
 kann. Mit der Eingabe \texttt{3 * 4} beispielsweise denkt der Parser nach der
 Regel \texttt{T1} bereits, er hätte einen Match. Das folgende \texttt{*} kann er

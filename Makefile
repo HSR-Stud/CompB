@@ -1,7 +1,9 @@
 SHELL=bash
 TARGET=CompB.pdf
-LL=latexmk -pdf
+LL=latexmk -pdf -pdflatex="pdflatex --shell-escape %O %S"
 CLEAN=latexmk -C
+export PATH := pygments:$(PATH) 
+
 
 all: revision.tex $(TARGET) refresh
 
@@ -26,5 +28,6 @@ refresh:
 
 mupdf:
 	mupdf $(TARGET) &
+
 
 # vim: set tabstop=4 shiftwidth=4 noexpandtab:
