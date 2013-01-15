@@ -27,6 +27,15 @@
 \usepackage[babel=true]{microtype} % Micro-typographic optimizations
 \addtokomafont{disposition}{\rmfamily} % Set palatino as heading font
 
+% Configure table spacing
+
+\renewcommand{\arraystretch}{1.2}
+
+% Page break before each section
+
+\let\stdsection\section
+\renewcommand\section{\newpage\stdsection}
+
 % Additional math operators
 
 \DeclareMathOperator{\lb}{lb} % Binary logarithm
