@@ -11,9 +11,9 @@ anschliessend weiterverarbeitet wird. Bei Syntaxfehlern sollte der Parser
 möglichst gute Fehlermeldungen liefern und falls möglich mit der Verarbeitung
 der Eingabe fortfahren.
 
-Es gibt zwei Typen von Parsern: Top Down und Bottom Up Parser. Der Unterschied
+Es gibt zwei Typen von Parsern: Top-Down und Bottom-Up Parser. Der Unterschied
 besteht darin, wie die Parse-Bäume aufgebaut werden, entweder von den Blättern
-zur Wurzel (Bottom Up) oder umgekehrt (Top Down).
+zur Wurzel (Bottom-Up) oder umgekehrt (Top-Down).
 
 
 \subsection{Grammatik}
@@ -40,6 +40,8 @@ Startsymbol auf der Linken Seite.
 	3.~T &\rightarrow (E) \\
 	4.~T &\rightarrow id
 \end{align*}
+
+% TODO: Grammatikklassen (LL, LR, LL(k) etc\ldots)
 
 
 \subsection{Links- und Rechtsableitung}
@@ -104,9 +106,69 @@ versteckte Linksrekursion auftreten.
 \end{align*}
 
 
+\subsection{AST}
+
+Der AST (Abstract Syntax Tree) ist eine vereinfachte Variante des Parse-Trees,
+bei dem unnötige Details entfernt wurden. Mithilfe des ASTs wird die
+Code-Generierung sowie Optimierungen durchgeführt.
+
+
 \subsection{Top-Down Parser} 
 
-TODO
+Ein Top-Down Parser beginnt beim Startsymbol der Grammatik und baut den
+Parse-Baum von der Wurzel zu den Blättern sowie von links nach rechts auf.
+
+\subsubsection{Recursive Descent Parser}
+
+Eine speziell einfach implementierbare Variante eines Top-Down LL-Parsers ist
+der Recursive Descent Parser. Für jedes Nichtterminal wird eine Methode
+erstellt. Die Grammatikregeln werden als eine Folge von Aufrufen auf dieser
+Methode realisiert. Die Terminale werden in diesen Methoden konsumiert.
+
+Für einen Recursive Descent Parser benötigt man keine Parse-Tabelle, jedoch muss
+mit Backtracking gearbeitet werden, was wiederum Performance-Einbussen bedeutet.
+
+\textbf{Beispiel}
+
+Gegeben ist folgende Grammatik:
+%
+\begin{align*}
+	E &\rightarrow T \mid T + E \\
+	T &\rightarrow int \mid int * T \mid (E)
+\end{align*}
+%
+Daraus ergeben sich folgende Tokens:
+
+\texttt{INT}, \texttt{OPEN}, \texttt{CLOSE}, \texttt{PLUS}, \texttt{TIMES}
+
+Nachfolgend der C-Code eines einfachen Recursive Descent Parsers:
+%
+\begin{verbatim}
+bool term(TOKEN tok) { return *next++ ==  tok; }
+
+bool E1() { return T(); }
+bool E2() { return T() && term(PLUS) && E(); }
+bool E() {
+    TOKEN *save = next;
+    return (next = save, E1()) || (next = save, E2());
+}
+bool T1() { return term(INT); }
+bool T2() { return term(INT) && term(TIMES) && T(); }
+bool T3() { return term(OPEN) && E() && term(CLOSE); }
+bool T() {
+    TOKEN *save = next;
+    return (next = save, T1()) || (next = save, T2()) || (next = save, T3());
+}
+\end{verbatim}
+%
+Das Problem bei diesem Algorithmus ist, dass er nicht alle Eingaben verarbeiten
+kann. Mit der Eingabe \texttt{3 * 4} beispielsweise denkt der Parser nach der
+Regel \texttt{T1} bereits, er hätte einen Match. Das folgende \texttt{*} kann er
+jedoch nicht mehr zuordnen und failt. Dies liegt daran, dass die Grammatik nicht
+linksfaktorisiert ist. Mit einer linksfaktorisierung würde das Parsen aller
+Eingaben klappen. Aber auch ohne Linksfaktorisierung können Recursive Descent
+Parser mit erweitertem Backtracking implementiert werden, die mit allen
+Grammatiken klarkommt.
 
 
 \subsection{Bottom-Up Parser} 
@@ -125,22 +187,22 @@ Gegeben ist folgende Grammatik:
 Nachfolgend der Parse-Vorgang eines Bottom-Up Parsers für den Ausdruck $int * int + int$:
 \[
 	\begin{array}{|l|l|l|}
-	\hline
-	\textbf{Schritt} & \textbf{Ausdruck} & \textbf{Anzuwendende Regel} \\
-	\hline
-	1 & int * int + int & T \rightarrow int \\
-	2 & int * \boldsymbol T + int & T \rightarrow int * T \\
-	3 & \boldsymbol T + int & T \rightarrow int \\
-	4 & T + \boldsymbol T & E \rightarrow T \\
-	5 & T + \boldsymbol E & E \rightarrow T + E \\
-	6 & \boldsymbol E & \\
-	\hline
+		\hline
+		\textbf{Schritt} & \textbf{Ausdruck} & \textbf{Anzuwendende Regel} \\
+		\hline
+		1 & int * int + int & T \rightarrow int \\
+		2 & int * \boldsymbol T + int & T \rightarrow int * T \\
+		3 & \boldsymbol T + int & T \rightarrow int \\
+		4 & T + \boldsymbol T & E \rightarrow T \\
+		5 & T + \boldsymbol E & E \rightarrow T + E \\
+		6 & \boldsymbol E & \\
+		\hline
 	\end{array}
 \]
 
 Wenn man diese Parse-Schritte von unten nach oben betrachtet, sieht man, dass immer das am weitesten
 rechts stehende Non-Terminalsymbol (fett hervorgehoben) ersetzt wurde, es ist also eine
-Rechtsableitung von Unten nach Oben ($\rightarrow$ Bottom-Up).
+Rechtsableitung von unten nach oben ($\rightarrow$ Bottom-Up).
 
 
 \subsection{FIRST und FOLLOW Sets}
@@ -255,9 +317,3 @@ $(a|b)*abb$
 	A_2 & \rightarrow bA_3 &\\
 	A_3 & \rightarrow \varepsilon &
 \end{flalign*}
-
-
-
-
-
-

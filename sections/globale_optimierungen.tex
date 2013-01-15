@@ -4,7 +4,7 @@
 
 Globale Optimierung hängt von der Kenntnis einer Eigenschaft $P$ zu einem
 bestimmten Zeitpunkt der Programmausführung ab. Damit die Eigenschaft $P$ zu
-\textit{jedem} Ausführungszeitpunkt überprüft werden kann, muss das gesammte
+\textit{jedem} Ausführungszeitpunkt überprüft werden kann, muss das gesamte
 Programm bekannt sein.
 
 Aus Sicherheitsgründen sollte man deshalb eher konservativ optimieren. Im
@@ -20,4 +20,4 @@ Die Relation zwischen $IN$ und $OUT$ wird als \textit{Transferfunktion}
 bezeichnet.
 
 Innerhalb eines Grundblocks mit den Anweisungen $s_1,\ldots,s_n$ gilt:
-$IN[s_{i+1} = OUT[s_i]$.
+$IN[s_{i+1}] = OUT[s_i]$.

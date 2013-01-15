@@ -27,6 +27,12 @@
 \usepackage[babel=true]{microtype} % Micro-typographic optimizations
 \addtokomafont{disposition}{\rmfamily} % Set palatino as heading font
 
+% TikZ / PGF
+
+\usepackage{pgf} % Backend for TikZ
+\usepackage{tikz} % TikZ vector graphics
+\usetikzlibrary{arrows,automata}
+
 % Configure table spacing
 
 \renewcommand{\arraystretch}{1.2}
@@ -39,8 +45,3 @@
 % Additional math operators
 
 \DeclareMathOperator{\lb}{lb} % Binary logarithm
-
-% TikZ / PGF
-\usepackage{pgf} % Backend for TikZ
-\usepackage{tikz} % TikZ vector graphics
-\usetikzlibrary{arrows,automata}
