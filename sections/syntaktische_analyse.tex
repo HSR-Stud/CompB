@@ -94,7 +94,7 @@ werden:
 	\item Füge folgende Regel hinzu: $A' \rightarrow \varepsilon$
 \end{itemize}
 
-Hinweis: Die Grammatik darf keine $\varepsilon$-Produktionen enthalten, ansonsten kann eine
+Hinweis: Die Grammatik darf keine \textepsilon-Produktionen enthalten, ansonsten kann eine
 versteckte Linksrekursion auftreten.
 
 \textbf{Beispiel}
@@ -146,7 +146,7 @@ der Recursive Descent Parser. Für jedes Nichtterminal wird eine Methode
 erstellt. Die Grammatikregeln werden als eine Folge von Aufrufen auf dieser
 Methode realisiert. Die Terminale werden in diesen Methoden konsumiert.
 
-Für einen Recursive Descent Parser benötigt man keine Parse-Tabelle, jedoch muss
+Für einen Recursive Descent Parser benötigt man keine Parsetabelle, jedoch muss
 mit Backtracking gearbeitet werden, was wiederum Performance-Einbussen bedeutet.
 
 \textbf{Beispiel}
@@ -239,44 +239,49 @@ Man betrachtet dafür alle Produktionen, bei welchen $X$ auf der linken Seite st
 \begin{enumerate}
 	\item Wenn auf der rechten Seite der Produktion als erstes ein Terminal steht, gehört dieses
 		zum FIRST-Set von $X$.
-	\item Wenn auf der rechten Seite der Produktion ein $\varepsilon$ steht, gehört dieses zum
+	\item Wenn auf der rechten Seite der Produktion ein \textepsilon\ steht, gehört dieses zum
 		FIRST-Set von $X$.
 	\item Wenn auf der rechten Seite der Produktion als erstes ein Nicht-Terminal $Y$ steht, gehört
-		das FIRST-Set von $Y$ (abzüglich allfälliger $\varepsilon$) zum FIRST-Set von $X$.
-	\item Wenn dieses FIRST-Set von $Y$ ein $\varepsilon$ enthält, berücksichtigt man auch alle Fälle,
+		das FIRST-Set von $Y$ (abzüglich allfälliger \textepsilon) zum FIRST-Set von $X$.
+	\item Wenn dieses FIRST-Set von $Y$ ein \textepsilon\ enthält, berücksichtigt man auch alle Fälle,
 		bei welchen $Y$ weggelassen wird. Wenn es keine solchen Fälle gibt, gehört auch
-		$\varepsilon$ zum FIRST-Set von $X$.
+		\textepsilon\ zum FIRST-Set von $X$.
 \end{enumerate}
 
 \textbf{Beispiel}
 
 Grammatik:
+%
 \begin{flalign*}
 	S & \rightarrow Ax \mid By \mid z &\\
 	A & \rightarrow 1CB \mid 2CB &\\
 	B & \rightarrow 3B \mid C &\\
 	C & \rightarrow 4 \mid \varepsilon &
 \end{flalign*}
+%
 Lösungsweg:
+%
 \begin{enumerate}
 	\item Das FIRST-Set von $C$ ist $\{4,\varepsilon\}$ gemäss Regeln 1 und 2.
 	\item Das FIRST-Set von $B$ enthält gemäss Regel 1 $\{3\}$.
 	\item Aufgrund der Produktion $B \rightarrow C$ und der Regel 3 enthält das FIRST-Set von $B$ auch
-		das FIRST-Set von $C$, abzüglich des $\varepsilon$.
+		das FIRST-Set von $C$, abzüglich des \textepsilon.
 	\item Aufgrund der Regel 4 werden auch alle Produktionen berücksichtigt, bei denen das
-		$\varepsilon$ (und somit das $C$) "`überlesen"' wird. Da auf $C$ jedoch nichts mehr folgt,
+		\textepsilon\ (und somit das $C$) "`überlesen"' wird. Da auf $C$ jedoch nichts mehr folgt,
 		enthält FIRST(B) auch $\{\varepsilon\}$.
 	\item Das FIRST-Set von $A$ ist gemäss Regel 1 $\{1,2\}$.
 	\item Das FIRST-Set von $S$ enthält gemäss Regel 1 $\{z\}$.
 	\item Das FIRST-Set von $S$ enthält gemäss Regel 3 das FIRST-Set von $A$ und $B$, abzüglich
-		des $\varepsilon$ in FIRST(B).
-	\item Da FIRST(B) $\varepsilon$ enthält, wird zusätzlich der Fall
+		des \textepsilon\ in FIRST(B).
+	\item Da FIRST(B) \textepsilon\ enthält, wird zusätzlich der Fall
 		berücksichtigt, bei dem $B$ weggelassen wird. Da in der Produktion $S
 		\rightarrow By$ auf das $B$ ein $y$ folgt, ist auch dieses in FIRST(S)
 		enthalten. (Falls anstelle von $y$ ein Non-Terminal folgen würde, müsste man
 		auch dieses auf"|lösen.)
 \end{enumerate}
+%
 Obige Lösungsschritte resultieren in folgenden FIRST-Sets:
+%
 \begin{flalign*}
 	& FIRST(S) = \{1,2,3,4,y,z\} &\\
 	& FIRST(A) = \{1,2\} &\\
@@ -291,40 +296,111 @@ welchen $X$ auf der rechten Seite steht.
 
 \begin{enumerate}
 	\item Wenn $X$ das Startsymbol ist, gehört $\$$ zum FOLLOW-Set von $X$.
-	\item Für jede Produktion $A \rightarrow aXb$, füge FIRST(b) (ohne
-		$\varepsilon$) zu FOLLOW(X) hinzu.
-	\item Falls $\varepsilon$ in FIRST(b) ist, füge FOLLOW(A) zu FOLLOW(X)
+	\item Für jede Produktion $A \rightarrow \alpha X \beta$, füge
+		FIRST(\textbeta) (ohne \textepsilon) zu FOLLOW(X) hinzu.
+	\item Falls \textepsilon\ in FIRST(\textbeta) ist, füge FOLLOW(A) zu FOLLOW(X)
 		hinzu.
-	\item Für jede Produktion $A \rightarrow aX$, füge FOLLOW(A) zu FOLLOW(X)
+	\item Für jede Produktion $A \rightarrow \alpha X$, füge FOLLOW(A) zu FOLLOW(X)
 		hinzu.
 \end{enumerate}
 
 \textbf{Beispiel}
 
 Grammatik:
+%
 \begin{flalign*}
 	S & \rightarrow Ax \mid By \mid z &\\
 	A & \rightarrow 1CB \mid 2CB &\\
 	B & \rightarrow 3B \mid C &\\
 	C & \rightarrow 4 \mid \varepsilon &
 \end{flalign*}
+%
 Lösungsweg:
+%
 \begin{enumerate}
 	\item Das FOLLOW-Set von $S$ enthält gemäss Regel 1 $\{\$\}$.
 	\item Das FOLLOW-Set von $A$ enthält gemäss Regel 2 $\{x\}$.
 	\item Das FOLLOW-Set von $B$ enthält gemäss Regel 2 $\{y\}$.
 	\item Das FOLLOW-Set von $B$ enthält gemäss Regel 4 das FOLLOW-Set von $A$: $\{x\}$.
 	\item Das FOLLOW-Set von $C$ enthält gemäss Regel 2 das FIRST-Set von $B$ ohne
-		$\varepsilon$: $\{3, 4\}$.
+		\textepsilon: $\{3, 4\}$.
 	\item Das FOLLOW-Set von $C$ enthält gemäss Regel 3 das FOLLOW-Set von $A$:
 		$\{x\}$.
 	\item Das FOLLOW-Set von $C$ enthält gemäss Regel 4 das FOLLOW-Set von $B$:
 		$\{x, y\}$.
 \end{enumerate}
+%
 Obige Lösungsschritte resultieren in folgenden FOLLOW-Sets:
+%
 \begin{flalign*}
 	& FIRST(S) = \{\$\} &\\
 	& FIRST(A) = \{x\} &\\
 	& FIRST(B) = \{x,y\} &\\
 	& FIRST(C) = \{3,4,x,y\} &
 \end{flalign*}
+
+
+\subsection{LL(1) Parsetabellen}
+
+Damit man eine deterministische Parsetabelle erstellen kann, braucht man eine
+LL(1) Grammatik. Folgende Kriterien garantieren, dass eine Grammatik nicht LL(1)
+ist:
+
+\begin{itemize}
+	\item Die Grammatik ist linksrekursiv
+	\item Die Grammatik ist nicht linksfaktorisiert
+	\item Die Grammatik ist mehrdeutig
+\end{itemize}
+
+Dies sind jedoch nicht die einzigen Kriterien. Um sicher zu gehen, dass eine
+Grammatik LL(1) ist, muss man eine deterministische Parsetabelle aufstellen.
+
+Die Parsetabelle ist horizontal mit den Nicht-Terminalsymbolen sowie mit $\$$
+und vertikal mit den Terminalsymbolen beschriftet.
+
+Folgender Algorithmus wird auf jede Produktion $A \rightarrow \alpha$ angewendet:
+
+\begin{enumerate}
+	\item Für jedes Terminalsymbol $t$ im FIRST-Set von \textalpha\ gilt: $T[A,t]
+		= \alpha$.
+	\item Falls \textepsilon\ im FIRST-Set von \textalpha\ ist, gilt für jedes
+		Terminalsymbol im FOLLOW-Set von $A$: $T[A,t] = \alpha$.
+	\item Falls \textepsilon\ im FIRST-Set von \textalpha\ ist und $\$$ im
+		FOLLOW-Set von $A$ ist, gilt: $T[A,\$] = \alpha$.
+\end{enumerate}
+
+\textbf{Beispiel}
+
+Grammatik:
+%
+\begin{flalign*}
+	S & \rightarrow Ax \mid By \mid z &\\
+	A & \rightarrow 1CB \mid 2CB &\\
+	B & \rightarrow 3B \mid C &\\
+	C & \rightarrow 4 \mid \varepsilon &
+\end{flalign*}
+%
+Parsetabelle:
+{%
+	\newcommand{\WidestEntry}{$4 \mid \varepsilon$}%
+	\newcommand{\stw}[1]{\makebox[\widthof{\WidestEntry}]{$#1$}}% stw -> set to widest
+	\setlength{\mathindent}{0cm}
+	\[
+		\begin{array}{|c|c|c|c|c|c|c|c|c|}
+			\hline
+			& \stw{1} & \stw{2} & \stw{3} & \stw{4} & \stw{x} & \stw{y} & \stw{z} & \stw{\$} \\
+			\hline
+			S & Ax & Ax & By & By & & By & z & \\
+			\hline
+			A & 1CB & 2B & & & & & & \\
+			\hline
+			B & & & 3B & C & C & C & & \\
+			\hline
+			C & & & \varepsilon & 4 \mid \varepsilon & \varepsilon & \varepsilon & & \\
+			\hline
+		\end{array}
+	\]
+}%
+Mithilfe dieser Parsetabelle sieht man, dass die gegebene Grammatik aufgrund
+Mehrdeutigkeiten nicht LL(1) ist: Im Feld $T[C,4]$ gibt es zwei mögliche
+Produktionen, welche man anwenden könnte.
