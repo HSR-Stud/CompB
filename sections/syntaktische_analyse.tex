@@ -42,6 +42,13 @@ Startsymbol auf der Linken Seite.
 \end{align*}
 
 
+\subsection{AST}
+
+Der AST (Abstract Syntax Tree) ist eine vereinfachte Variante des Parse-Trees,
+bei dem unnötige Details entfernt wurden. Mithilfe des ASTs wird die
+Code-Generierung sowie Optimierungen durchgeführt.
+
+
 \subsection{Links- und Rechtsableitung}
 
 Links oder Rechts bedeutet, in welcher Reihenfolge die Nicht-Terminale durch
@@ -104,11 +111,27 @@ versteckte Linksrekursion auftreten.
 \end{align*}
 
 
-\subsection{AST}
+\subsection{Linksfaktorisierung}
 
-Der AST (Abstract Syntax Tree) ist eine vereinfachte Variante des Parse-Trees,
-bei dem unnötige Details entfernt wurden. Mithilfe des ASTs wird die
-Code-Generierung sowie Optimierungen durchgeführt.
+Ein Parser liest den Tokenstream in der Regel von links nach rechts, deshalb
+macht es Sinn, wenn der Parser sofort entscheiden kann, welche Regeln er
+anwenden muss.  Wenn zwei Produktionen auf der rechten Seite jedoch einen
+gemeinsamen Präfix haben, ist dies nicht möglich. Beispiel:
+%
+\begin{align*}
+	STMT &\rightarrow if~COND~then~STMT \mid if~COND~then~STMT~else~STMT \mid OTHER
+\end{align*}
+%
+Der gemeinsame Präfix ist in diesem Fall \textit{if COND then STMT}. Bei der
+Linksfaktorisierung wird der Teil nach diesem Präfix in ein separate Regel
+verschoben, damit der Entscheidungspunkt so weit verschoben wird, dass der
+Parser eine direkte Entscheidung treffen kann.
+%
+\begin{align*}
+	STMT &\rightarrow if~COND~then~STMT~OPTELSE \mid OTHER \\
+	OPTELSE &\rightarrow else~STMT \mid \varepsilon
+\end{align*}
+%
 
 
 \subsection{Top-Down Parser} 
@@ -163,7 +186,7 @@ Das Problem bei diesem Algorithmus ist, dass er nicht alle Eingaben verarbeiten
 kann. Mit der Eingabe \texttt{3 * 4} beispielsweise denkt der Parser nach der
 Regel \texttt{T1} bereits, er hätte einen Match. Das folgende \texttt{*} kann er
 jedoch nicht mehr zuordnen und failt. Dies liegt daran, dass die Grammatik nicht
-linksfaktorisiert ist. Mit einer linksfaktorisierung würde das Parsen aller
+linksfaktorisiert ist. Mit einer Linksfaktorisierung würde das Parsen aller
 Eingaben klappen. Aber auch ohne Linksfaktorisierung können Recursive Descent
 Parser mit erweitertem Backtracking implementiert werden, die mit allen
 Grammatiken klarkommt.
