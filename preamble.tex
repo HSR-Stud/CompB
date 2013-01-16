@@ -20,7 +20,6 @@
 \usepackage{fancyhdr} % Fancy headers
 \usepackage{textgreek} % Greek letters in textmode
 \usepackage{calc} % Width calculations
-\usepackage{ccicons} % Creative Commons icons
 
 % Font configuration
 
@@ -54,15 +53,20 @@
 
 \DeclareMathOperator{\lb}{lb} % Binary logarithm
 
+% Creative Commons icons
+
+\graphicspath{{texutils/ccicons/}}
+\input{texutils/ccicons.tex}
+
 % License macro
 
-\gdef\ccLogos{\ccby}
+\gdef\ccLogos{\ccLogo\;\ccShareAlike}
 \newcommand{\license}[1]{\renewcommand{\ccLogos}{#1}}
 
 % Settings and macros for titlepage
 
-\input{texutils/authorsfromfile.tex}
-\input{revision.tex}
+\input{texutils/authorsfromfile.tex} % Load authors from CONTRIBUTORS.txt
+\input{revision.tex} % Show last git change date
 
 \newcommand{\moduleName}[1]{\gdef\modname{#1}}
 \newcommand{\moduleAbbr}[1]{\gdef\modabbr{#1}}
