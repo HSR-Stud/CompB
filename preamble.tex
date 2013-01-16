@@ -20,6 +20,7 @@
 \usepackage{fancyhdr} % Fancy headers
 \usepackage{textgreek} % Greek letters in textmode
 \usepackage{calc} % Width calculations
+\usepackage{ccicons} % Creative Commons icons
 
 % Font configuration
 
@@ -52,3 +53,21 @@
 % Additional math operators
 
 \DeclareMathOperator{\lb}{lb} % Binary logarithm
+
+% License macro
+
+\gdef\ccLogos{\ccby}
+\newcommand{\license}[1]{\renewcommand{\ccLogos}{#1}}
+
+% Settings and macros for titlepage
+
+\input{texutils/authorsfromfile.tex}
+\input{revision.tex}
+
+\newcommand{\moduleName}[1]{\gdef\modname{#1}}
+\newcommand{\moduleAbbr}[1]{\gdef\modabbr{#1}}
+
+\title{\modabbr\ Zusammenfassung}
+\subject{\modname}
+\authorsfromfile{CONTRIBUTORS.txt}{\url{https://github.com/HSR-Stud/\modabbr/}}
+\date{Stand: \revisiondate}
