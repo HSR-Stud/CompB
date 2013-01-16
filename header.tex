@@ -2,6 +2,8 @@
 \makeatletter
 \let\Title\@title
 \let\Author\@author
+\normalfont\sbox0{\normalfont\Title\qquad\qquad\Author}
+\ifdim\wd0>\textwidth\def\Author{\modurl}\fi
 \makeatother
 
 % Fancy headers configuration
