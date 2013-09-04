@@ -41,26 +41,35 @@ Startsymbol auf der Linken Seite.
 	4.~T &\rightarrow id
 \end{align*}
 
+Es gibt verschiedene Typen von Grammatiken. Diese werden normalerweise mit
+$X_1X_2(k)$ bezeichnet:
+\begin{itemize}
+	\item $X_1$: Leserichtung. Entweder $L$ (links-nach-rechts) oder $R$ (rechts-nach-links).
+	\item $X_2$: Ableitungsrichtung. Entweder $L$ (Linksableitung) oder $R$
+		(Rechtsableitung).
+	\item $k$: Anzahl Zeichen für Lookahead.
+\end{itemize}
+
 
 \subsection{AST}
 
 Der AST (Abstract Syntax Tree) ist eine vereinfachte Variante des Parse-Trees,
-bei dem unnötige Details entfernt wurden. Mithilfe des ASTs wird die
+bei dem unnötige Details entfernt wurden. Mithilfe des ASTs werden
 Code-Generierung sowie Optimierungen durchgeführt.
 
 
 \subsection{Links- und Rechtsableitung}
 
-Links oder Rechts bedeutet, in welcher Reihenfolge die Nicht-Terminale durch
+Links- oder Rechts- beschreibt die Reihenfolge, in der die Nicht-Terminale durch
 Terminale ersetzt werden. Bei der Linksableitung wird immer das erste
-Nichtterminal vin Links gesehen als erstes ersetzt.
+Nichtterminal von links gesehen als erstes ersetzt.
 
 
 \subsection{Operator-Assoziativität}
 
-Links- oder Rechtsassoziativität bedeutet, in welcher Reihenfolge Operatoren
-evaluiert werden.  Dies ist vor allem bei arithmetischen Ausdrücken von
-Bedeutung. Als Beispiel: Addition ist linksassoziativ.
+Links- oder Rechtsassoziativität beschreibt die Reihenfolge, in welcher
+Operatoren evaluiert werden.  Dies ist vor allem bei arithmetischen Ausdrücken
+von Bedeutung. Als Beispiel: Addition ist linksassoziativ.
 \[
 	a + b + c + d = (((a + b) + c) + d)
 \]
@@ -190,6 +199,9 @@ linksfaktorisiert ist. Mit einer Linksfaktorisierung würde das Parsen aller
 Eingaben klappen. Aber auch ohne Linksfaktorisierung können Recursive Descent
 Parser mit erweitertem Backtracking implementiert werden, die mit allen
 Grammatiken klarkommt.
+
+Ein grosser Vorteil des Recursive Descent Parsers ist die Einfachheit der
+Implementierung: Produktionen können quasi 1:1 im Code abgebildet werden.
 
 
 \subsection{Bottom-Up Parser} 
