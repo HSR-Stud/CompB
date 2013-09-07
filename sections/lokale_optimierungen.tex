@@ -1,40 +1,80 @@
 \section{Lokale Optimierungen}
 
+\subsection{Algebraic Simplifications}
+
+Einige algebraische Anweisungen können vereinfacht werden. Beispiel:
+
+\begin{varwidth}{\textwidth}\ttfamily
+X := 1 * A\\
+Y := X ** 2\\
+Q := Y + 0\\
+R := Q * 8
+\end{varwidth}%
+\hspace{1cm}$\Rightarrow$\hspace{1cm}%
+\begin{varwidth}{\textwidth}\ttfamily
+X := A\\
+Y := X * X\\
+Q := Y\\
+R := Q << 3
+\end{varwidth}
+
+\subsection{Constant Folding}
+
+Ausdrücke mit konstanten Werten werden zur Compile-Zeit evaluiert. Beispiel:
+
+\begin{varwidth}{\textwidth}\ttfamily
+X := 3 * 2 + 4
+\end{varwidth}%
+\hspace{1cm}$\Rightarrow$\hspace{1cm}%
+\begin{varwidth}{\textwidth}\ttfamily
+X := 10
+\end{varwidth}
+
 \subsection{Constant Propagation}
 
-Konstanten werden wo immer möglich eingesetzt.
+Konstanten werden wo immer möglich eingesetzt. Beispiel:
 
-\textbf{Beispiel}
-%
-\begin{verbatim}
-X := 3
-Y := Z * W
+\begin{varwidth}{\textwidth}\ttfamily
+X := 3\\
+Y := Z * W\\
 Q := X + Y
-\end{verbatim}
-%
-wird zu
-%
-\begin{verbatim}
-X := 3
-Y := Z * W
+\end{varwidth}%
+\hspace{1cm}$\Rightarrow$\hspace{1cm}%
+\begin{varwidth}{\textwidth}\ttfamily
+X := 3\\
+Y := Z * W\\
 Q := 3 + Y
-\end{verbatim}
+\end{varwidth}
+
+\subsection{Copy Propagation}
+
+Falls in einem Block \texttt{W := X} vorkommt, kann man in allen folgenden
+Einsätzen von \texttt{W} anstelle von \texttt{W} gleich \texttt{X} verwenden.
+Beispiel:
+
+\begin{varwidth}{\textwidth}\ttfamily
+X := 7\\
+Y := X\\
+Q := A + X
+\end{varwidth}%
+\hspace{1cm}$\Rightarrow$\hspace{1cm}%
+\begin{varwidth}{\textwidth}\ttfamily
+X := 7\\
+Y := 7\\
+Q := A + 7
+\end{varwidth}
 
 \subsection{Dead Code Elimination}
 
-Ungenutzer Code wird entfernt.
+Ungenutzer Code wird entfernt. Beispiel:
 
-\textbf{Beispiel}
-%
-\begin{verbatim}
-X := 3
-Y := Z * W
+\begin{varwidth}{\textwidth}\ttfamily
+X := 3\\
+Y := Z * W\\
 Q := 3 + Y
-\end{verbatim}
-%
-wird zu
-%
-\begin{verbatim}
-Y := Z * W
+\end{varwidth}%
+\hspace{1cm}$\Rightarrow$\hspace{1cm}%
+\begin{varwidth}{\textwidth}\ttfamily
+Y := Z * W\\
 Q := 3 + Y
-\end{verbatim}
+\end{varwidth}
