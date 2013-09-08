@@ -1,21 +1,30 @@
-\section{Lokale Optimierungen}
+\section{Optimierung}
+
+\subsection{Lokale / Globale Optimierung}
+
+\textbf{Lokale Optimierung} ist unabhängig vom globalen Zustand eines
+Programmes.
+
+\textbf{Globale Optimierung} hängt von der Kenntnis einer Eigenschaft $P$ zu
+einem bestimmten Zeitpunkt der Programmausführung ab. Damit die Eigenschaft $P$
+zu \textit{jedem} Ausführungszeitpunkt überprüft werden kann, muss das gesamte
+Programm bekannt sein. Aus Sicherheitsgründen sollte man deshalb eher
+konservativ optimieren. Im Zweifelsfall ist es besser nichts zu tun.
 
 \subsection{Algebraic Simplifications}
 
 Einige algebraische Anweisungen können vereinfacht werden. Beispiel:
 
 \begin{varwidth}{\textwidth}\ttfamily
-X := 1 * A\\
-Y := X ** 2\\
-Q := Y + 0\\
-R := Q * 8
+X := 0 * A\\
+Y := B ** 2\\
+Q := C * 8
 \end{varwidth}%
 \hspace{1cm}$\Rightarrow$\hspace{1cm}%
 \begin{varwidth}{\textwidth}\ttfamily
-X := A\\
-Y := X * X\\
-Q := Y\\
-R := Q << 3
+X := 0\\
+Y := B * B\\
+Q := C \verb|<<| 3
 \end{varwidth}
 
 \subsection{Constant Folding}
@@ -36,13 +45,11 @@ Konstanten werden wo immer möglich eingesetzt. Beispiel:
 
 \begin{varwidth}{\textwidth}\ttfamily
 X := 3\\
-Y := Z * W\\
 Q := X + Y
 \end{varwidth}%
 \hspace{1cm}$\Rightarrow$\hspace{1cm}%
 \begin{varwidth}{\textwidth}\ttfamily
 X := 3\\
-Y := Z * W\\
 Q := 3 + Y
 \end{varwidth}
 
@@ -54,13 +61,11 @@ Beispiel:
 
 \begin{varwidth}{\textwidth}\ttfamily
 X := 7\\
-Y := X\\
 Q := A + X
 \end{varwidth}%
 \hspace{1cm}$\Rightarrow$\hspace{1cm}%
 \begin{varwidth}{\textwidth}\ttfamily
 X := 7\\
-Y := 7\\
 Q := A + 7
 \end{varwidth}
 

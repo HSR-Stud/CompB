@@ -1,6 +1,12 @@
 \section{Registerallokation}
 
 
+Die Registerallokation gehört zu den globalen Optimierungen. Sie hat zum Ziel,
+möglichst viele der Variablen so lange wie möglich in den Prozessorregistern zu
+halten. Hat man mehr Variablen zur selben Zeit als Register, muss man Werte
+auslagern (spillen).
+
+
 \subsection{Einfacher Top-Down Ansatz}
 
 Die Register werden nach Anzahl Verwendungen der Variablen vergeben.
