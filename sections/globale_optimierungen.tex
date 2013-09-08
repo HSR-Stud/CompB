@@ -1,23 +1,54 @@
 \section{Globale Optimierungen}
 
+
 \subsection{Risiken}
 
 Globale Optimierung hängt von der Kenntnis einer Eigenschaft $P$ zu einem
 bestimmten Zeitpunkt der Programmausführung ab. Damit die Eigenschaft $P$ zu
 \textit{jedem} Ausführungszeitpunkt überprüft werden kann, muss das gesamte
-Programm bekannt sein.
+Programm bekannt sein. Aus Sicherheitsgründen sollte man deshalb eher
+konservativ optimieren. Im Zweifelsfall ist es besser nichts zu tun.
 
-Aus Sicherheitsgründen sollte man deshalb eher konservativ optimieren. Im
-Zweifelsfall ist es besser nichts zu tun.
 
 \subsection{Datenflussanalyse}
 
 Die Datenflussanalyse verknüpft mit jedem Programmpunkt einen Datenflusswert.
 Die Datenflusswerte vor und hinter einer Anwendung $p$ sind $IN[p]$ und
-$OUT[p]$.
-
-Die Relation zwischen $IN$ und $OUT$ wird als \textit{Transferfunktion}
-bezeichnet.
+$OUT[p]$. Die Relation zwischen $IN$ und $OUT$ wird als
+\textit{Transferfunktion} bezeichnet.
 
 Innerhalb eines Grundblocks mit den Anweisungen $s_1,\ldots,s_n$ gilt:
 $IN[s_{i+1}] = OUT[s_i]$.
+
+
+\subsection{Liveness-Analyse}
+
+\textbf{Regeln}
+
+\begin{enumerate}
+	\item Eine Variable \textbf{nach} einem Statement ist lebendig (alive), wenn
+		sie \textbf{vor} einem nachfolgenden Statement lebendig ist.\\
+		\[ L(p, x, out) = \lor \{ L(s, x, in) | s \textrm{ is a successor of } p \} \]
+	\item Wenn eine Variable in einem Statement gelesen wird, ist sie \textbf{vor}
+		dem Statement lebendig.\\
+		\[ L(s, x, in) = true \textrm{ if } s \textrm{ refers to } x \textrm{ on the rhs} \]
+	\item Wenn eine Variable in einem Statement geschrieben, aber nicht gelesen
+		wird, ist sie \textbf{vor} dem Statement tot (dead).\\
+		\[ L(x := e, x, in) = false \textrm{ if } e \textrm{ does not refer to } x \]
+	\item Wenn in einem Statement eine Variable weder gelesen noch geschrieben
+		wird, ist die Liveness \textbf{vor} dem Statement gleich wie \textbf{nach}
+		dem Statement.\\
+		\[ L(s, x, in) = L(s, x, out) \textrm{ if } s \textrm{ does not refer to } x \]
+\end{enumerate}
+
+\textbf{Algorithmus}
+
+\begin{enumerate}
+	\item Zu Beginn ist die Liveness überall $false$.
+	\item Wähle ein Statement $s$, welches eine der Regeln 1-4 nicht erfüllt.
+		Korrigiere die Liveness. Wiederhole diesen Schritt bis alle Statements die
+		Regeln 1-4 erfüllen.
+\end{enumerate}
+
+Jede Stelle kann bei diesem Algorithmus höchstens ein mal die Liveness wechseln,
+zudem kann die Liveness nur von $false$ zu $true$ wechseln, nicht umgekehrt.
