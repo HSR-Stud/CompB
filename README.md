@@ -20,6 +20,9 @@ werden können. Latexmk 4.24 kann für Debian
 heruntergeladen werden. Ab Debian Wheezy ist es bereits in den
 Standard-Repositories mitgeliefert.
 
+Falls eine Fehlermeldung wegen einem fehlenden `lgrxenc.def` file auftritt,
+muss das Paket `texlive-langgreek` installiert werden.
+
 
 Building
 --------
