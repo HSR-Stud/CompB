@@ -50,6 +50,31 @@ $X_1X_2(k)$ bezeichnet:
 	\item $k$: Anzahl Zeichen für Lookahead.
 \end{itemize}
 
+\subsection{Mehrdeutigkeiten}
+
+Einige syntaktische Konstrukte lassen sich nur ungenau durch eine Grammatik beschreiben, eventuell entstehen Mehrdeutigkeiten in der Grammatik. Die Folge daraus ist, dass sich gewisse Sätze innerhalb einer Grammatik unterschiedlich interpretieren lassen. Mehrdeutigkeiten lassen sich manchmal innerhalb der Parserimplementation lösen, besser wäre allerdings eine eindeutige Grammatik. Mehrdeutigkeiten lassen sich nur mithilfe von Zusatzregeln vollständig eliminieren.
+
+\textbf{Beispiel, mehrdeutiges If-Statement}
+
+Grammatik:
+\begin{align*}
+	1.~STMT &\rightarrow if \; EXPR \; then \; STMT \\
+	2.~STMT &\rightarrow if \; EXPR \; then \; STMT \; else \; STMT \\
+\end{align*}
+Beispielsatz: 
+\[
+	if \; E1 \; then \; if \; E2 \; then \; S1 \; else \; S2
+\]
+
+Dieser Satz kann unterschiedlich interpretiert werden:
+\[
+	(if \; E1 \; then \; ( \; if \; E2 \; then \; S1 \; else \; S2 \; ) \; )
+\]
+\[
+	(if \; E1 \; then \; ( \; if \; E2 \; then \; S1 \; ) \; else \; S2 \; )
+\]
+
+Eine fehlende Regel für die Eindeutigkeit könnte lauten: Die 'else' Anweisung gehört immer zum am nächsten liegenden 'then'
 
 \subsection{AST}
 
