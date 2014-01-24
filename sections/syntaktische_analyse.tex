@@ -167,6 +167,26 @@ Parser eine direkte Entscheidung treffen kann.
 \end{align*}
 %
 
+\subsection{Parserbezeichnungen, Kurzbeschreibung}
+
+\paragraph{LL(k) Parser}
+
+\begin{itemize}
+	\item \textbf{L}inks nach Rechts
+	\item \textbf{L}inks Ableitungen
+	\item \textbf{k} Tokens Lookahead
+\end{itemize}
+Ein LL-Parser ist ein Top-Down-Parser, der die Eingabe von Links nach rechts abarbeitet, um eine Linksableitung der Eingabe zu berechnen.
+
+\paragraph{(S)LR(k)}
+
+\begin{itemize}
+	\item \textbf{S}imple
+	\item \textbf{L}inks nach Rechts
+	\item \textbf{R}echtsreduktion
+	\item \textbf{k} Tokens Lookahead
+\end{itemize}
+Ein LR-Parser ist ein Bottom-Up-Parser für LR-Grammatiken. Bei diesen kontextfreien Grammatiken wird die Eingabe von links nach rechts abgearbeitet, um die Rechtsreduktion zum Startsymbol zu berechnen. Ein SLR Parser - im Umterschied zum LR Parser - versucht Shift/Reduce-Konflikte durch Betrachtung der FOLLOW-SETs besser zu lösen.
 
 \subsection{Top-Down Parser} 
 
