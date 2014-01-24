@@ -413,7 +413,7 @@ Dies sind jedoch nicht die einzigen Kriterien. Um sicher zu gehen, dass eine
 Grammatik LL(1) ist, muss man eine deterministische Parsetabelle aufstellen.
 
 Die Parsetabelle ist vertikal mit den Nicht-Terminalsymbolen sowie mit $\$$
-und horizontal mit den Terminalsymbolen beschriftet.
+und horizontal mit den Terminalsymbolen beschriftet. Die Nicht-Terminalsymbole stehen für das am meisten links stehende Symbol im Parsebaum, die Terminalsymbole stehen für das jeweils nächste Token. Die Einträge stehen für die rechte Seite der verwendeten Produktion.
 
 Folgender Algorithmus wird auf jede Produktion $A \rightarrow \alpha$ angewendet:
 
