@@ -45,6 +45,13 @@ herauslesen.
 	\large\texttt{x = foo - 1;}
 \end{minipage}
 
+\textbf{Gängige Pattern für lexikalische Definitionen}
+
+\texttt{LineTerminator =} \verb/{\r|\n|\r\n}/ \\
+\texttt{WhiteSpace =} \verb/{LineTerminator} | [ \t\f]/ \\
+\texttt{dec\_int\_lit =} \verb/0 | [1-9][0-9]*/ \\
+\texttt{dec\_int\_id =} \verb/{[A-Za-z_][A-Za-z_0-9]\*}/ \\
+
 
 \subsection{Probleme, Schwerigkeiten}
 
