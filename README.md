@@ -21,7 +21,7 @@ heruntergeladen werden. Ab Debian Wheezy ist es bereits in den
 Standard-Repositories mitgeliefert.
 
 Falls eine Fehlermeldung wegen einem fehlenden `lgrxenc.def` file auftritt,
-muss das Paket `texlive-langgreek` installiert werden.
+muss das Paket `texlive-lang-greek` installiert werden.
 
 
 Building
