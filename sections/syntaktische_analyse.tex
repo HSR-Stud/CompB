@@ -397,6 +397,169 @@ Obige Lösungsschritte resultieren in folgenden FOLLOW-Sets:
 \end{flalign*}
 
 
+\subsection{(S)LR(0) Parsetabellen, Shift-Reduce Parsing (Bottom-Up)}
+Ein Beispiel für die Erstellung einer Parsetabelle für LR(0) Parser um ein Shift-Reduce Parsing durchzuführen.
+
+Als erster Schritt muss ein Übergangsautomat erstellt werden. Die Knoten des Automaten bestehen aus dem Kern-Element und einem Epsylonabschluss/Hülle/Closure, die Hülle kann auch leer sein. Der Übergangsautomat wird Schritt für Schritt aufgebaut, er zeigt die Übergänge bei schrittweisem Parsen. Der Punkt (.) zeigt die aktuelle Position beim Parsen.\\
+Das Kern-Element 0 ist der Startpunkt und enthält die Startregel. Der Punkt ist vor dem ersten Element auf der linken Seite. In der Hülle stehen die Regeln die ebenfalls auf mögliche Positionen darstellen. Die Übergänge sind die gelesenen Zeichen. 
+
+Gegeben ist folgende Grammatik (Regeln mit römischen Zahlen beschriften für bessere Unterscheidung von Zuständen):
+\begin{flalign*}
+	I.\quad   & L \rightarrow A &\\
+	II.\quad  & A \rightarrow xA &\\
+	III.\quad & A \rightarrow yB &\\
+	IV.\quad  & B \rightarrow Bz & \\
+	V.\quad   & B \rightarrow Z &
+\end{flalign*}
+
+Beachten bei Erstellung des Automaten:
+\begin{enumerate}
+	\item Ein Bottom-Up Parser benötigt ein eindeutiges Startsymbol, das ist in dieser Grammatik schon gegeben, ansonsten muss es hinzugefügt werden.
+	\item In der Hülle muss der Punkt immer an der vordersten Stelle der Linken Seite stehen, ansonsten stimmt etwas nicht.
+\end{enumerate}
+
+\textbf{Übergangsautomat}
+
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=4cm,
+  thick,main node/.style={rectangle split,rectangle split parts=2,draw}]
+
+  \node[main node] (0) {
+  $I_0: L \rightarrow .A $
+   \nodepart{two} 
+   $\begin{aligned}
+    \phantom{I_0:} 
+    & A \rightarrow .xA \\
+   	& A \rightarrow .yB
+  \end{aligned}$
+   };
+ \node[main node] (1) [below of=0]  {
+  $I_1: L \rightarrow A. $
+   \nodepart{two} 
+   \phantom{null}
+   };
+ \node[main node] [right of=0] (2) {
+  $I_2: A \rightarrow x.A $
+   \nodepart{two} 
+   $\begin{aligned}
+    \phantom{I_2:} 
+    & A \rightarrow x.A \\
+    & A \rightarrow .yB
+  \end{aligned}$
+   };
+   \node[main node] [below of=2] (3) {
+  $I_3: A \rightarrow y.B $
+   \nodepart{two} 
+   $\begin{aligned}
+    \phantom{I_3:} 
+   & B \rightarrow .Bz \\
+   & B \rightarrow .z
+  \end{aligned}$
+   };
+   \node[main node] [right of=3] (4) {
+  $\begin{aligned}
+    I_4: 
+    & A \rightarrow yB. \\
+    & B \rightarrow B.z
+  \end{aligned}$
+   \nodepart{two} 
+    \phantom{null} 
+   };
+   \node[main node] [below of=3] (5) {
+  $I_5: B \rightarrow z. $
+   \nodepart{two} 
+  \phantom{null}
+   };
+   \node[main node] (6) [below of=4] {
+  $I_6: B \rightarrow Bz. $
+   \nodepart{two} 
+    \phantom{null} 
+   };
+   \node[main node] [right of=2] (7)  {
+  $I_7: A \rightarrow xA. $
+   \nodepart{two} 
+  \phantom{null}
+   };
+   \node[circle, draw][below of=1] (8) {
+     acc
+   };
+
+  \path
+    (0) edge node {A} (1)
+        edge node {x} (2)
+        edge node {y} (3)
+    
+    (1) edge node {\$} (8)
+        
+    (2) edge node {A} (7)
+        edge node {y} (3)
+        edge [loop above] node {x} (2)
+        
+    (3) edge node {B} (4)
+        edge node {z} (5)
+        
+    (4) edge node {z} (6);
+\end{tikzpicture}
+
+\textbf{Parstabelle}
+
+Aus dem Automaten kann jetzt eine Parsetabelle erstellt werden. In sind die Zeilen mit dem Zustand des Automaten beschriftet und die Spalten mit dem Input (Terminal und Nicht-Terminal Symbole). Ausgefüllt wird, wenn in Zustand x Input y kommt muss zu Zustand Z gewechselt werden.
+
+\begin{table}[h]
+\begin{tabular}{l||l|l|l|l||l|l|l}
+  & \multicolumn{4}{l||}{Action} 											& \multicolumn{3}{l}{Goto}\\ \hline
+  & x             & y              & z                  & \$               & L & A & B \\ \hline \hline
+0 & s2            & s3             &                    &                  &   & 1 &   \\ \hline
+1 & a) rI  b) -   & a) rI  b) -    & a) rI  b) -        & acc              &   &   &   \\ \hline
+2 & s2            & s3             &                    &                  &   & 7 &   \\ \hline
+3 &               &                & s5                 &                  &   &   & 4 \\ \hline
+4 & a) rIII  b) - & a) rIII  b) -  & a) s6/rIII  b) s6  & a) rIII b) rIII  &   &   &   \\ \hline
+5 & a) rV  b) -   & a) rV  b) -    & a) rV  b) rV       & a) rV  b) rV     &   &   &   \\ \hline
+6 & a) rIV  b) -  & a) rIV  b) -   & a) rIV  b) rIV     & a) rIV  b) rIV   &   &   &   \\ \hline
+7 & a) rII  b) -  & a) rII  b) -   & a) rII  b) -       & a) rII  b) rII   &   &   &   \\ 
+\end{tabular}
+\end{table}
+\begin{flalign*}
+	& FOLLOW(A) = \{\$\} &\\
+	& FOLLOW(B) = \{z, \$\} &\\
+\end{flalign*}
+\begin{description}
+	\item[a) LR(0) Parser] Regeln mit einem Punkt am Ende werden aufgelöst.
+	\item[b) SLR Parser] Bei Regeln mit Punkt am Ende wird das Follow-Set betrachtet. Nur wenn der Input im Follow-Set des Produktionskopfes ist wird reduziert. Dadurch können auch Shift/Reduce Konflikte (siehe Zustand 4 Input z) gelöst werden.
+\end{description}
+
+\textbf{Beispiel Parsevorgang}
+\begin{itemize}
+	\item Zustände sind auf einem Stack
+	\item Auf ein Reduce folgt immer ein Goto
+	\item Bei einem Reduce werden Input Symbole durch Nicht-Terminals ersetzt
+	\item Bei einem Reduce wird Parstabelleder Stack abgebaut, wenn mehr als ein Symbol ersetzt wird, wird auch der Stack mehr abgebaut
+\end{itemize}
+
+\begin{table}[h]
+    \begin{tabular}{|l|l|l|l|p{7cm}|}
+    \hline
+    Zustände    & Symbole & Input  & Aktion  & Bemerkung                                                                                    \\ \hline
+    0           & ~       & xxyzz\$ & s2      & Start bei Zustand 0, ein x im Input verlangt einen Shift von Zustand 2                       \\ \hline
+    0,2         & x       & xyzz\$ & s2      & ~                                                                                            \\ \hline
+    0,2,2       & xx      & yzz\$  & s3      & ~                                                                                            \\ \hline
+    0,2,2,3     & xxy     & zz\$   & s5      & ~                                                                                            \\ \hline
+    0,2,2,3,5   & xxyz    & z\$    & rV      & Ein z in Zustand 5 erfordert ein Reduce                                                      \\ \hline
+    0,2,2,3     & xxyB    & z\$    & Goto(4) & Auf ein Reduce muss ein Goto folgen                                                          \\ \hline
+    0,2,2,3,4   & xxyB    & z\$    & s6      & ~                                                                                            \\ \hline
+    0,2,2,3,4,6 & xxyBz   & \$     & rIV     & Hier werden zwei Zeichen reduziert, also müssen auch zwei Zustände vom Stack abgebaut werden \\ \hline
+    0,2,2,3     & xxyB    & \$     & Goto(4) & ~                                                                                            \\ \hline
+    0,2,2,3,4   & xxyB    & \$     & rIII    & ~                                                                                            \\ \hline
+    0,2,2       & xxA     & \$     & Goto(7) & ~                                                                                            \\ \hline
+    0,2,2,7     & xxA     & \$     & rII     & ~                                                                                            \\ \hline
+    0,2         & xA      & \$     & Goto(7) & ~                                                                                            \\ \hline
+    0,2,7       & xA      & \$     & rII     & ~                                                                                            \\ \hline
+    0           & A       & \$     & Goto(1) & ~                                                                                            \\ \hline
+    0,1         & A       & \$     & acc     & \$ bei Zustand 1 heisst, das Wort ist aktzepitert                                            \\ \hline
+    \end{tabular}
+\end{table}
+
+
+
 \subsection{LL(1) Parsetabellen}
 
 Damit man eine deterministische Parsetabelle erstellen kann, braucht man eine
